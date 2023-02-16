@@ -31,3 +31,10 @@
 * Execute `pip install -r ./requirements.txt`
 
 * Execute `pip install tensorflow==2.11.*`
+
+# Flags
+
+ - `id`: Where to save downloaded images, dir will be deleted after predictions outputter
+ - `ujp`: Path to json that contains image URLs
+ - `tjp`: Path to json that contains target brands
+ - `p`: If set to `1` results will be better but it will take more time

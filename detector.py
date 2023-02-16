@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import shutil
 from dataclasses import dataclass, field
 
 import cv2
@@ -48,7 +49,7 @@ class Detector:
         with open(self.target_brands_path) as f:
             content = f.read()
         brand_dict = json.loads(content)
-        self.brand_list = brand_dict['brand_list']
+        self.brand_list = [a.lower() for a in brand_dict['brand_list']]
 
     def _read_images_to_matrices(self):
         img_files = [a for a in os.listdir(
@@ -95,11 +96,15 @@ class Detector:
             image_to_brands[key] = found_brands
         return image_to_brands
 
+    def _delete_images(self):
+        shutil.rmtree(self.image_path)
+
     def transform(self, rotations=[-45, -90, 45, 90], url_as_keys=True, addtional_brands=[]):
         brand_list = self.brand_list + addtional_brands
         file_to_img = self._read_images_to_matrices()
         pred_dict = self._generate_pred_dict(file_to_img, rotations=rotations)
         image_to_brands = self._image_to_brand(pred_dict, brand_list)
+        self._delete_images()
         if url_as_keys:
             image_to_brands = {
                 self.url_mapper[key]: image_to_brands[key] for key in image_to_brands}
