@@ -13,7 +13,7 @@ def main():
                         help='name of the dir, images will be downloaded')
 
     parser.add_argument('-ujp', '--url_json_path', type=str,
-                        default=None, help='Path to the json file of urls')
+                        default='example_urls_2.json', help='Path to the json file of urls')
 
     parser.add_argument('-tjp', '--target_json_path', type=str,
                         default=None, help='Path to the json file of target brands')
