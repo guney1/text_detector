@@ -29,7 +29,6 @@ class Detector:
 
     def _validate(self):
         assert self.url_json_path in os.listdir()
-        assert self.target_brands_path in os.listdir()
 
     def _download_images(self):
         with open(self.url_json_path) as f:
@@ -46,10 +45,13 @@ class Detector:
                 pass
 
     def _read_target_brands(self):
-        with open(self.target_brands_path) as f:
-            content = f.read()
-        brand_dict = json.loads(content)
-        self.brand_list = [a.lower() for a in brand_dict['brand_list']]
+        if self.target_brands_path is not None:
+            with open(self.target_brands_path) as f:
+                content = f.read()
+            brand_dict = json.loads(content)
+            self.brand_list = [a.lower() for a in brand_dict['brand_list']]
+        else:
+            self.brand_list = []
 
     def _read_images_to_matrices(self):
         img_files = [a for a in os.listdir(
@@ -103,7 +105,10 @@ class Detector:
         brand_list = self.brand_list + addtional_brands
         file_to_img = self._read_images_to_matrices()
         pred_dict = self._generate_pred_dict(file_to_img, rotations=rotations)
-        image_to_brands = self._image_to_brand(pred_dict, brand_list)
+        if len(brand_list) == 0:
+            image_to_brands = pred_dict
+        else:
+            image_to_brands = self._image_to_brand(pred_dict, brand_list)
         self._delete_images()
         if url_as_keys:
             image_to_brands = {
