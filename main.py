@@ -1,4 +1,5 @@
 import argparse
+import time
 from unicodedata import name
 
 from detector import *
@@ -35,5 +36,8 @@ def main():
 
 
 if __name__ == '__main__':
+    start = time.time()
     result = main()
+    end = time.time()
     print(result)
+    print(end - start)
